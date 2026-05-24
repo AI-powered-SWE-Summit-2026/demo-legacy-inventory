@@ -1,0 +1,77 @@
+@model PurchaseOrder
+@{
+    ViewData["Title"] = "Create Purchase Order";
+    var suppliers = (IEnumerable<Supplier>)ViewBag.Suppliers;
+    var products = (IEnumerable<Product>)ViewBag.Products;
+}
+
+<h1 class="h2 mb-3">Create Purchase Order</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label asp-for="OrderNumber"></label>
+            <input asp-for="OrderNumber" class="form-control" />
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="SupplierId"></label>
+            <select asp-for="SupplierId" class="form-control">
+                @foreach (var supplier in suppliers)
+                {
+                    <option value="@supplier.Id">@supplier.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Status"></label>
+            <select asp-for="Status" class="form-control">
+                <option>Draft</option>
+                <option>Submitted</option>
+                <option>Approved</option>
+                <option>Received</option>
+                <option>Cancelled</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label asp-for="OrderDate"></label>
+            <input asp-for="OrderDate" class="form-control" type="date" />
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ExpectedDeliveryDate"></label>
+            <input asp-for="ExpectedDeliveryDate" class="form-control" type="date" />
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="CreatedByUserId"></label>
+            <input asp-for="CreatedByUserId" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Notes"></label>
+        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+    </div>
+    <hr />
+    <h2 class="h5">Single Legacy Line Entry</h2>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Product</label>
+            <select name="productId" class="form-control">
+                @foreach (var product in products)
+                {
+                    <option value="@product.Id">@product.Name (@product.SKU)</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Quantity</label>
+            <input name="quantity" class="form-control" type="number" value="1" min="1" />
+        </div>
+        <div class="form-group col-md-3">
+            <label>Unit Price</label>
+            <input name="unitPrice" class="form-control" type="number" step="0.01" value="0.00" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-link">Back</a>
+</form>

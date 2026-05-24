@@ -1,0 +1,62 @@
+@model Product
+@{
+    ViewData["Title"] = "Edit Product";
+    var categories = (IEnumerable<Category>)ViewBag.Categories;
+    var suppliers = (IEnumerable<Supplier>)ViewBag.Suppliers;
+}
+
+<h1 class="h2 mb-3">Edit Product</h1>
+
+<form asp-action="Edit" method="post">
+    <input asp-for="Id" type="hidden" />
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="SKU"></label>
+            <input asp-for="SKU" class="form-control" />
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="UnitPrice"></label>
+            <input asp-for="UnitPrice" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label asp-for="CategoryId"></label>
+            <select asp-for="CategoryId" class="form-control">
+                @foreach (var category in categories)
+                {
+                    <option value="@category.Id" selected="@(category.Id == Model.CategoryId ? "selected" : null)">@category.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="SupplierId"></label>
+            <select asp-for="SupplierId" class="form-control">
+                @foreach (var supplier in suppliers)
+                {
+                    <option value="@supplier.Id" selected="@(supplier.Id == Model.SupplierId ? "selected" : null)">@supplier.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <label asp-for="ReorderLevel"></label>
+            <input asp-for="ReorderLevel" class="form-control" />
+        </div>
+        <div class="form-group col-md-2 d-flex align-items-center">
+            <div class="form-check mt-4">
+                <input asp-for="IsActive" class="form-check-input" />
+                <label asp-for="IsActive" class="form-check-label"></label>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-link">Back</a>
+</form>

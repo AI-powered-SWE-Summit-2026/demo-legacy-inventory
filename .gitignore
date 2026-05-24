@@ -1,0 +1,20 @@
+## .NET gitignore
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.suo
+*.userprefs
+.DS_Store
+Thumbs.db
+*.log
+TestResults/
+[Pp]ackages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.db
+*.db-shm
+*.db-wal

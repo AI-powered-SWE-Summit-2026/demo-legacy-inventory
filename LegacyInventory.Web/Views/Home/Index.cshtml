@@ -1,0 +1,71 @@
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Dashboard";
+    var summaryJson = JsonConvert.SerializeObject(new[]
+    {
+        ViewBag.ProductCount,
+        ViewBag.SupplierCount,
+        ViewBag.WarehouseCount,
+        ViewBag.LowStockCount
+    });
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2">@ViewBag.DashboardTitle</h1>
+        <p class="text-muted mb-0">@ViewBag.WelcomeMessage</p>
+        <small class="text-muted">@ViewBag.SpanishWelcomeMessage</small>
+    </div>
+    <a asp-action="OpenSeedData" class="btn btn-outline-secondary">Open Seed Script</a>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-3">
+        <div class="card border-primary">
+            <div class="card-body">
+                <h5 class="card-title">Products</h5>
+                <p class="display-4">@ViewBag.ProductCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card border-success">
+            <div class="card-body">
+                <h5 class="card-title">Suppliers</h5>
+                <p class="display-4">@ViewBag.SupplierCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card border-info">
+            <div class="card-body">
+                <h5 class="card-title">Warehouses</h5>
+                <p class="display-4">@ViewBag.WarehouseCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card border-danger">
+            <div class="card-body">
+                <h5 class="card-title">Low Stock</h5>
+                <p class="display-4">@ViewBag.LowStockCount</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Operational Snapshot</h5>
+        <p>Environment: <strong>@ViewBag.EnvironmentName</strong></p>
+        <p>Open purchase orders: <strong>@ViewBag.OpenPurchaseOrders</strong></p>
+        <pre class="bg-light p-3">@summaryJson</pre>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var dashboardSummary = @Html.Raw(summaryJson);
+    console.log('Legacy dashboard payload', dashboardSummary);
+</script>
+}
