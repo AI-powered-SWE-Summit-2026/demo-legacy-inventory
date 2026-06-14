@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Purchase Order Details";
     var trackingInfo = ViewBag.TrackingInfo as ShipmentTrackingInfo;
+    var warehouses = (IEnumerable<Warehouse>)ViewBag.Warehouses;
+    var primaryShipment = Model.Shipments.OrderByDescending(x => x.Id).FirstOrDefault();
 }
 
 <h1 class="h2 mb-3">Purchase Order @Model.OrderNumber</h1>
@@ -39,6 +41,48 @@
                     <p class="text-muted">No shipment linked to this purchase order.</p>
                 }
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h2 class="h5">Lifecycle Actions</h2>
+        <div class="d-flex flex-wrap">
+            @if (Model.Status == "Draft")
+            {
+                <form asp-action="Submit" method="post" class="mr-2 mb-2">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Submit</button>
+                </form>
+            }
+            @if (Model.Status == "Submitted")
+            {
+                <form asp-action="Approve" method="post" class="mr-2 mb-2">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-sm btn-outline-success">Approve</button>
+                </form>
+            }
+            @if (Model.Status == "Approved")
+            {
+                <form asp-action="Receive" method="post" class="form-inline mr-2 mb-2">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <select name="warehouseId" class="form-control form-control-sm mr-2">
+                        @foreach (var warehouse in warehouses)
+                        {
+                            <option value="@warehouse.Id">@warehouse.Name</option>
+                        }
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-outline-success">Receive</button>
+                </form>
+            }
+            @if (Model.Status != "Received" && Model.Status != "Cancelled")
+            {
+                <form asp-action="Cancel" method="post" class="mr-2 mb-2">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+                </form>
+            }
         </div>
     </div>
 </div>
@@ -91,5 +135,39 @@
         </tbody>
     </table>
 }
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h2 class="h5">Shipment Lifecycle</h2>
+        <form asp-action="UpsertShipment" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" name="shipmentId" value="@primaryShipment?.Id" />
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label>Tracking Number</label>
+                    <input name="trackingNumber" class="form-control" value="@primaryShipment?.TrackingNumber" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Carrier</label>
+                    <input name="carrierName" class="form-control" value="@primaryShipment?.CarrierName" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Status</label>
+                    <select name="status" class="form-control">
+                        <option selected="@(primaryShipment?.Status == "Created" ? "selected" : null)">Created</option>
+                        <option selected="@(primaryShipment?.Status == "Packed" ? "selected" : null)">Packed</option>
+                        <option selected="@(primaryShipment?.Status == "In Transit" ? "selected" : null)">In Transit</option>
+                        <option selected="@(primaryShipment?.Status == "Delivered" ? "selected" : null)">Delivered</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Estimated Arrival</label>
+                    <input name="estimatedArrival" type="date" class="form-control" value="@primaryShipment?.EstimatedArrival?.ToString("yyyy-MM-dd")" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-outline-secondary">Save Shipment Update</button>
+        </form>
+    </div>
+</div>
 
 <a asp-action="Index" class="btn btn-link">Back</a>

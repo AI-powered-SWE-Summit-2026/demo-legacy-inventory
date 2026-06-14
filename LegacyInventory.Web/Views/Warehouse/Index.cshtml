@@ -16,6 +16,7 @@
             <th>Capacity</th>
             <th>Manager</th>
             <th>Status</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -27,6 +28,7 @@
             <td>@item.Capacity</td>
             <td>@item.ManagerName</td>
             <td>@(item.IsActive ? "Active" : "Inactive")</td>
+            <td><a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a></td>
         </tr>
     }
     </tbody>

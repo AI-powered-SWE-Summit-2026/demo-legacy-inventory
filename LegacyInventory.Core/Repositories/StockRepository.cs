@@ -34,5 +34,27 @@ namespace LegacyInventory.Core.Repositories
                 .OrderBy(x => x.Product.Name)
                 .ToList();
         }
+
+        public StockLevel GetById(int id)
+        {
+            return _context.StockLevels
+                .Include(x => x.Product)
+                .Include(x => x.Warehouse)
+                .FirstOrDefault(x => x.Id == id);
+        }
+
+        public void Update(StockLevel stockLevel)
+        {
+            var existing = _context.StockLevels.FirstOrDefault(x => x.Id == stockLevel.Id);
+            if (existing == null)
+            {
+                return;
+            }
+
+            existing.Quantity = stockLevel.Quantity;
+            existing.ReservedQuantity = stockLevel.ReservedQuantity;
+            existing.LastUpdated = stockLevel.LastUpdated == default ? System.DateTime.UtcNow : stockLevel.LastUpdated;
+            _context.SaveChanges();
+        }
     }
 }

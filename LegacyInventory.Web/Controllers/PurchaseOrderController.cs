@@ -73,6 +73,8 @@ namespace LegacyInventory.Web.Controllers
                 return NotFound();
             }
 
+            ViewBag.Warehouses = _purchaseOrderRepository.GetWarehouses();
+
             var shipment = purchaseOrder.Shipments.FirstOrDefault();
             if (shipment != null)
             {
@@ -82,6 +84,72 @@ namespace LegacyInventory.Web.Controllers
             }
 
             return View(purchaseOrder);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Submit(int id)
+        {
+            if (!_purchaseOrderRepository.UpdateStatus(id, "Submitted", "Submitted for approval."))
+            {
+                return NotFound();
+            }
+
+            _logger.LogInformation("Submitted purchase order {PurchaseOrderId}", id);
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Approve(int id)
+        {
+            if (!_purchaseOrderRepository.UpdateStatus(id, "Approved", "Approved for receiving."))
+            {
+                return NotFound();
+            }
+
+            _logger.LogInformation("Approved purchase order {PurchaseOrderId}", id);
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Cancel(int id)
+        {
+            if (!_purchaseOrderRepository.UpdateStatus(id, "Cancelled", "Order cancelled."))
+            {
+                return NotFound();
+            }
+
+            _logger.LogInformation("Cancelled purchase order {PurchaseOrderId}", id);
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Receive(int id, int warehouseId)
+        {
+            if (!_purchaseOrderRepository.Receive(id, warehouseId, DateTime.UtcNow))
+            {
+                return NotFound();
+            }
+
+            _logger.LogInformation("Received purchase order {PurchaseOrderId} into warehouse {WarehouseId}", id, warehouseId);
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpsertShipment(int id, int? shipmentId, string trackingNumber, string carrierName, string status, DateTime? estimatedArrival)
+        {
+            var shipment = _purchaseOrderRepository.UpsertShipment(id, shipmentId, trackingNumber, carrierName, status, estimatedArrival);
+            if (shipment == null)
+            {
+                return NotFound();
+            }
+
+            _logger.LogInformation("Updated shipment {ShipmentId} for purchase order {PurchaseOrderId}", shipment.Id, id);
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         private void LoadLookups()

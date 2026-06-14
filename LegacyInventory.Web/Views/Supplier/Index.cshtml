@@ -16,6 +16,7 @@
             <th>Email</th>
             <th>Country</th>
             <th>Status</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -27,6 +28,7 @@
             <td>@item.Email</td>
             <td>@item.Country</td>
             <td>@(item.IsActive ? "Active" : "Inactive")</td>
+            <td><a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a></td>
         </tr>
     }
     </tbody>

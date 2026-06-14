@@ -44,5 +44,41 @@ namespace LegacyInventory.Web.Controllers
 
             return View(warehouse);
         }
+
+        public IActionResult Edit(int id)
+        {
+            var warehouse = _context.Warehouses.FirstOrDefault(x => x.Id == id);
+            if (warehouse == null)
+            {
+                return NotFound();
+            }
+
+            return View(warehouse);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Warehouse warehouse)
+        {
+            if (ModelState.IsValid)
+            {
+                var existing = _context.Warehouses.FirstOrDefault(x => x.Id == warehouse.Id);
+                if (existing == null)
+                {
+                    return NotFound();
+                }
+
+                existing.Name = warehouse.Name;
+                existing.Location = warehouse.Location;
+                existing.Capacity = warehouse.Capacity;
+                existing.ManagerName = warehouse.ManagerName;
+                existing.IsActive = warehouse.IsActive;
+                _context.SaveChanges();
+                _logger.LogInformation("Updated warehouse {WarehouseId}", warehouse.Id);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(warehouse);
+        }
     }
 }

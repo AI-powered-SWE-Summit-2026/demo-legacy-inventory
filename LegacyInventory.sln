@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyInventory.Core", "Leg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyInventory.Web", "LegacyInventory.Web\LegacyInventory.Web.csproj", "{5DAA9ED6-76BC-4C9A-9FDD-ACE4FE787FFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyInventory.Core.Tests", "LegacyInventory.Core.Tests\LegacyInventory.Core.Tests.csproj", "{F69D617E-356C-42CD-A958-979EEE4CC189}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{5DAA9ED6-76BC-4C9A-9FDD-ACE4FE787FFA}.Release|x64.Build.0 = Release|Any CPU
 		{5DAA9ED6-76BC-4C9A-9FDD-ACE4FE787FFA}.Release|x86.ActiveCfg = Release|Any CPU
 		{5DAA9ED6-76BC-4C9A-9FDD-ACE4FE787FFA}.Release|x86.Build.0 = Release|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Debug|x64.Build.0 = Debug|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Debug|x86.Build.0 = Debug|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Release|x64.ActiveCfg = Release|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Release|x64.Build.0 = Release|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Release|x86.ActiveCfg = Release|Any CPU
+		{F69D617E-356C-42CD-A958-979EEE4CC189}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

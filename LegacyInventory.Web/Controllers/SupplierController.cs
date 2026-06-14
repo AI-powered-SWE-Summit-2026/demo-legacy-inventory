@@ -48,5 +48,43 @@ namespace LegacyInventory.Web.Controllers
 
             return View(supplier);
         }
+
+        public IActionResult Edit(int id)
+        {
+            var supplier = _context.Suppliers.FirstOrDefault(x => x.Id == id);
+            if (supplier == null)
+            {
+                return NotFound();
+            }
+
+            return View(supplier);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Supplier supplier)
+        {
+            if (ModelState.IsValid)
+            {
+                var existing = _context.Suppliers.FirstOrDefault(x => x.Id == supplier.Id);
+                if (existing == null)
+                {
+                    return NotFound();
+                }
+
+                existing.Name = supplier.Name;
+                existing.ContactName = supplier.ContactName;
+                existing.Email = supplier.Email;
+                existing.Phone = supplier.Phone;
+                existing.Address = supplier.Address;
+                existing.Country = supplier.Country;
+                existing.IsActive = supplier.IsActive;
+                _context.SaveChanges();
+                _logger.LogInformation("Updated supplier {SupplierId}", supplier.Id);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(supplier);
+        }
     }
 }

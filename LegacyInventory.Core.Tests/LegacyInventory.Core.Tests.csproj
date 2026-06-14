@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <CoverageLowerBound>25</CoverageLowerBound>
+    <CoverageUpperBound>30</CoverageUpperBound>
+    <CoverletOutput>$(MSBuildProjectDirectory)\TestResults\Coverage\</CoverletOutput>
+    <CoverletOutputFormat>cobertura</CoverletOutputFormat>
+    <SkipAutoProps>false</SkipAutoProps>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.32" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
+    <PackageReference Include="coverlet.msbuild" Version="3.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LegacyInventory.Core\LegacyInventory.Core.csproj" />
+  </ItemGroup>
+
+  <Target Name="EnforceCoverageBand" AfterTargets="GenerateCoverageResultAfterTest" Condition="'$(CollectCoverage)' == 'true'">
+    <PropertyGroup>
+      <CoverageReportFile>$(CoverletOutput)coverage.cobertura.xml</CoverageReportFile>
+    </PropertyGroup>
+
+    <XmlPeek XmlInputPath="$(CoverageReportFile)" Query="/coverage/@line-rate">
+      <Output TaskParameter="Result" PropertyName="LineRateRaw" />
+    </XmlPeek>
+
+    <PropertyGroup>
+      <LineCoveragePercent>$([MSBuild]::Multiply($(LineRateRaw), 100))</LineCoveragePercent>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Line coverage: $(LineCoveragePercent)% (target $(CoverageLowerBound)-$(CoverageUpperBound)%)." />
+    <Error Condition="$([System.Decimal]::Parse('$(LineCoveragePercent)')) &lt; $(CoverageLowerBound)"
+           Text="Coverage below lower bound: $(LineCoveragePercent)% &lt; $(CoverageLowerBound)%." />
+    <Error Condition="$([System.Decimal]::Parse('$(LineCoveragePercent)')) &gt; $(CoverageUpperBound)"
+           Text="Coverage above upper bound: $(LineCoveragePercent)% &gt; $(CoverageUpperBound)%." />
+  </Target>
+</Project>
